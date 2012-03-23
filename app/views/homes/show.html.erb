@@ -3,6 +3,24 @@
 <% end -%>
 
 <%= content_for :javascript do %>
+
+  $(document).ready(function() {
+    var login = "<%= current_user.login %>" + "@143.54.12.23";
+    var password = "admin";
+    $(document).trigger('connect',{login: login,password: password});
+  });
+
+  $(document).bind('chat_data', function (ev,chat) {
+    $.ajax({
+        type: "GET",
+        url: session_update_home_path,
+        data: { data: "cocozilda1" },
+        success:function(){
+          $('#teste').html('<%= session[:chat] %>');
+        }
+    });
+  });
+
   /*
    * Expand and collapse thread
   */
@@ -172,6 +190,9 @@
 <% end %>
 
 <div id="recent-activity">
+
+  <%= session[:chat]  %>
+  <div id="teste"></div>
 
   <% for interval in intervals(@all_contents) do -%>
     <% unless interval[:contents].empty? -%>
