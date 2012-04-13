@@ -186,14 +186,15 @@ Mconf::Application.routes.draw do
   resource :home do
     member do
       get :user_rooms
-      post :session_update
     end
   end
 
   resource :invite do
     member do
       get :invite_room, :as => 'inviteroom'
+      get :invite_chat, :as => 'invitechat'
       post :send_invite, :as => 'sendinvite'
+      post :add_user, :as => 'adduser'
       get :send_notification, :as => 'sendnotification'
     end
   end

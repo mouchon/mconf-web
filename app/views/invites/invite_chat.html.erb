@@ -1,0 +1,47 @@
+<script type="text/javascript">
+  $(document).ready(function () {
+    var jid;
+    var name;
+
+    $("#member_token").tokenInput("/invite/invite_chat.json", {
+      crossDomain: false,
+      theme: 'facebook',
+      preventDuplicates: true,
+      searchDelay: 200,
+      hintText: "<%= t('invite_people.users.hint') %>",
+      noResultsText: "<%= t('invite_people.users.no_results') %>",
+      searchingText: "<%= t('invite_people.users.searching') %>",
+      tokenLimit: '1',
+      onAdd: function(item){
+        jid = item.id + "@chat-bottin.no-ip.info";
+        name = item.name;
+      },
+      onDelete: function(item){
+        jid = null;
+        name = null;
+      }
+    });
+
+    $("#submit").click(function(){
+      if(jid && name){
+        $(document).trigger('contact_added', { jid: jid, name: name, inviter: "<%= current_user.full_name %>"});
+        $.fancybox.close();
+      }
+    });
+  });
+</script>
+
+<h3 class="dialog_title"><%=t('chat.add')%></h3>
+
+<div>
+  <%= label_tag :member_token, t('chat.name.one') %>
+  <spam class="tip">(<%= t('invite_people.names_tip') %>)</spam><br/>
+  <%= text_field_tag 'member_token' %>
+</div>
+
+<br><br><br>
+<div class="submit float_right">
+  <button id="submit" type="submit" class="basic_button pale_button">
+    <%=t('chat.add')%>
+  </button>
+</div>

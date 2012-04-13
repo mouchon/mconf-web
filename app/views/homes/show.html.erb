@@ -1,24 +1,40 @@
+<script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js'></script>
+
 <%= content_for :headers do  -%>
-  <%= javascript_include_tag 'jquery.filestyle', 'fckeditor/fckeditor', 'jquery.ba-bbq.min' %>
+  <%= javascript_include_tag 'jquery.filestyle', 'fckeditor/fckeditor', 'jquery.ba-bbq.min', 'strophe.js', 'chat.js' %>
 <% end -%>
 
 <%= content_for :javascript do %>
 
   $(document).ready(function() {
-    var login = "<%= current_user.login %>" + "@143.54.12.23";
-    var password = "admin";
-    $(document).trigger('connect',{login: login,password: password});
-  });
+    var login = "<%= current_user.login %>" + "@chat-bottin.no-ip.info";
+    var password = "<%= current_user.crypted_password %>";
+    var full_name = "<%= current_user.full_name %>";
+    var last_status = null;
+    //$(document).trigger('connect',{login: login,password: password,name: full_name});
 
-  $(document).bind('chat_data', function (ev,chat) {
-    $.ajax({
-        type: "GET",
-        url: session_update_home_path,
-        data: { data: "cocozilda1" },
-        success:function(){
-          $('#teste').html('<%= session[:chat] %>');
-        }
+    $("#status").click(function(){
+      $("#status_list").toggle(0);
+      $("#chat_status_"+last_status).removeClass("hidden");
+      $("#chat_status_"+$("#status").attr('class')).addClass("hidden");
+      last_status = $("#status").attr('class');
     });
+
+    $("#status_list .chat_status").click(function(){
+      var status = $(this).attr('class').replace("chat_status ","");
+      $("#status").removeClass();
+      $(document).trigger('change_status', {login: login, password: password, status: status,name: full_name});
+      $("#status").addClass(status);
+      $("#status_list").toggle(0);
+    });
+
+    $("a#add_user").fancybox({
+      'hideOnContentClick' : false,
+      'autoDimensions' : false,
+      'width' : 306,
+      'height' : 140
+    });
+
   });
 
   /*
@@ -181,6 +197,36 @@
     <%end%>
   </div>
 
+  <div id="web-chat" class="margin-up">
+    <div id="web-chat-title">
+      <h3>
+        <%=image_tag("icons/comments.png",:class=>"icon")%>
+        Web Chat
+      </h3>
+    </div>
+
+    <div class="webchat_area">
+      <div class="user-area">
+        <%= link_to image_tag("icons/user_add.png",:class=>"icon", :title=>t('chat.add')), invitechat_invite_path, :id=>"add_user" %>
+        <ul>
+          <li id="status" class="offline">
+            <%= current_user.full_name %>
+          </li>
+          <li id="status_list" class="none hidden">
+            <ul>
+              <li id="chat_status_online" class="chat_status online"> <%= t('chat.status.online') %> </li>
+              <li id="chat_status_dnd" class="chat_status dnd"> <%= t('chat.status.busy') %> </li>
+              <li id="chat_status_away" class="chat_status away"> <%= t('chat.status.away') %> </li>
+              <li id="chat_status_offline" class="chat_status offline"> <%= t('chat.status.offline') %> </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div id="roster-area">
+        <ul></ul>
+      </div>
+    </div>
+  </div>
 <%end%>
 
 <%= content_for :menu do  %>
@@ -190,9 +236,6 @@
 <% end %>
 
 <div id="recent-activity">
-
-  <%= session[:chat]  %>
-  <div id="teste"></div>
 
   <% for interval in intervals(@all_contents) do -%>
     <% unless interval[:contents].empty? -%>
@@ -222,4 +265,12 @@
 
   <%= will_paginate @all_contents %>
   <br/>
+</div>
+
+<!-- approval dialog -->
+<div id='approve_dialog' class='hidden'>
+  <p>
+    <span id='approve-jid'></span> has requested a subscription
+    to your presence.  Approve or deny?
+  </p>
 </div>

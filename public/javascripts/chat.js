@@ -1,5 +1,6 @@
 var Chat = {
     connection: null,
+    full_name: null,
 
     jid_to_id: function (jid) {
         return Strophe.getBareJidFromJid(jid)
@@ -15,11 +16,11 @@ var Chat = {
             // transform jid into an id
             var jid_id = Chat.jid_to_id(jid);
 
-            var contact = $("<li id='" + jid_id + "'>" +
-                            "<div class='roster-contact offline'>" +
+            var contact = $("<li id='" + jid_id + "' class='offline'>" +
+                            "<div class='roster-contact'>" +
                             "<div class='roster-name'>" +
                             name +
-                            "</div><div class='roster-jid'>" +
+                            "</div><div class='roster-jid hidden'>" +
                             jid +
                             "</div></div></li>");
 
@@ -28,6 +29,7 @@ var Chat = {
 
         // set up presence handler and send initial presence
         Chat.connection.addHandler(Chat.on_presence, null, "presence");
+
         Chat.connection.send($pres());
     },
 
@@ -37,18 +39,31 @@ var Chat = {
         var ptype = $(presence).attr('type');
         var from = $(presence).attr('from');
         var jid_id = Chat.jid_to_id(from);
+        var on = $(presence).attr('on');
 
         if (ptype === 'subscribe') {
             // populate pending_subscriber, the approve-jid span, and
             // open the dialog
+            var name = $(presence).attr('name');
             Chat.pending_subscriber = from;
-            $('#approve-jid').text(Strophe.getBareJidFromJid(from));
+            $('#approve-jid').text(name);
             $('#approve_dialog').dialog('open');
-        } else if (ptype !== 'error') {
-            var contact = $('#roster-area #' + jid_id + ' .roster-contact')
+        }
+        if (ptype === 'subscribed') {
+            Chat.connection.send($pres({
+                to: from,
+                "type": "subscribed", "on": "yes"}));
+        }
+        if (on === 'yes') {
+            Chat.connection.send($pres());
+        }
+        else if (ptype !== 'error') {
+            var contact = $('#roster-area #' + jid_id)
                 .removeClass("online")
+                .removeClass("busy")
                 .removeClass("away")
                 .removeClass("offline");
+
             if (ptype === 'unavailable') {
                 contact.addClass("offline");
             } else {
@@ -56,11 +71,15 @@ var Chat = {
                 if (show === "" || show === "chat") {
                     contact.addClass("online");
                 } else {
-                    contact.addClass("away");
+                    if (show == "dnd") {
+                        contact.addClass("busy");
+                    } else {
+                        contact.addClass("away");
+                    }
                 }
             }
 
-            var li = contact.parent();
+            var li = contact;
             li.remove();
             Chat.insert_contact(li);
         }
@@ -84,13 +103,11 @@ var Chat = {
                 $('#' + jid_id).remove();
             } else {
                 // contact is being added or modified
-                var contact_html = "<li id='" + jid_id + "'>" +
-                    "<div class='" +
-                    ($('#' + jid_id).attr('class') || "roster-contact offline") +
-                    "'>" +
+                var contact_html = "<li id='" + jid_id + "' class='" + ($('#' + jid_id).attr('class') || "offline") + "'>" +
+                    "<div class='roster-contact'>" +
                     "<div class='roster-name'>" +
                     name +
-                    "</div><div class='roster-jid'>" +
+                    "</div><div class='roster-jid hidden>" +
                     jid +
                     "</div></div></li>";
 
@@ -109,9 +126,10 @@ var Chat = {
         var full_jid = $(message).attr('from');
         var jid = Strophe.getBareJidFromJid(full_jid);
         var jid_id = Chat.jid_to_id(jid);
+        var name = $(message).attr('name');
 
         if ($('#chat-' + jid_id).length === 0) {
-            $('#chat-area').tabs('add', '#chat-' + jid_id, jid);
+            $('#chat-area').tabs('add', '#chat-' + jid_id, name);
             $('#chat-' + jid_id).append(
                 "<div class='chat-messages'></div>" +
                     "<input type='text' class='chat-input'>");
@@ -125,9 +143,7 @@ var Chat = {
         var composing = $(message).find('composing');
         if (composing.length > 0) {
             $('#chat-' + jid_id + ' .chat-messages').append(
-                "<div class='chat-event'>" +
-                    Strophe.getNodeFromJid(jid) +
-                    " is typing...</div>");
+                "<div class='chat-event'>" + name + " is typing...</div>");
 
             Chat.scroll_chat(jid_id);
         }
@@ -164,9 +180,8 @@ var Chat = {
             // add the new message
             $('#chat-' + jid_id + ' .chat-messages').append(
                 "<div class='chat-message'>" +
-                "&lt;<span class='chat-name'>" +
-                    Strophe.getNodeFromJid(jid) +
-                "</span>&gt;<span class='chat-text'>" +
+                "&lt;<span class='chat-name'>" + name +
+                "</span>&gt;<span class='chat-text'> " +
                     "</span></div>");
 
             $('#chat-' + jid_id + ' .chat-message:last .chat-text')
@@ -180,15 +195,21 @@ var Chat = {
 
     scroll_chat: function (jid_id) {
         var div = $('#chat-' + jid_id + ' .chat-messages').get(0);
-        div.scrollTop = div.scrollHeight;
+        if(div) div.scrollTop = div.scrollHeight;
     },
 
 
     presence_value: function (elem) {
         if (elem.hasClass('online')) {
-            return 2;
-        } else if (elem.hasClass('away')) {
-            return 1;
+            return 3;
+        } else {
+            if (elem.hasClass('busy')) {
+                return 2;
+            } else {
+                if(elem.hasClass('away')) {
+                    return 1;
+                }
+            }
         }
 
         return 0;
@@ -196,15 +217,14 @@ var Chat = {
 
     insert_contact: function (elem) {
         var jid = elem.find('.roster-jid').text();
-        var pres = Chat.presence_value(elem.find('.roster-contact'));
+        var pres = Chat.presence_value(elem);
 
         var contacts = $('#roster-area li');
 
         if (contacts.length > 0) {
             var inserted = false;
             contacts.each(function () {
-                var cmp_pres = Chat.presence_value(
-                    $(this).find('.roster-contact'));
+                var cmp_pres = Chat.presence_value($(this));
                 var cmp_jid = $(this).find('.roster-jid').text();
 
                 if (pres > cmp_pres) {
@@ -231,30 +251,6 @@ var Chat = {
 
 $(document).ready(function () {
 
-    $('#contact_dialog').dialog({
-        autoOpen: false,
-        draggable: false,
-        modal: true,
-        title: 'Add a Contact',
-        buttons: {
-            "Add": function () {
-                $(document).trigger('contact_added', {
-                    jid: $('#contact-jid').val(),
-                    name: $('#contact-name').val()
-                });
-
-                $('#contact-jid').val('');
-                $('#contact-name').val('');
-
-                $(this).dialog('close');
-            }
-        }
-    });
-
-    $('#new-contact').click(function (ev) {
-        $('#contact_dialog').dialog('open');
-    });
-
     $('#approve_dialog').dialog({
         autoOpen: false,
         draggable: false,
@@ -271,13 +267,13 @@ $(document).ready(function () {
             },
 
             "Approve": function () {
-                Chat.connection.send($pres({
-                    to: Chat.pending_subscriber,
-                    "type": "subscribed"}));
+                var iq = $iq({type: "set"}).c("query", {xmlns: "jabber:iq:roster"})
+                    .c("item", { jid: Chat.pending_subscriber, name: $('#approve-jid').text()});
+                Chat.connection.sendIQ(iq);
 
                 Chat.connection.send($pres({
                     to: Chat.pending_subscriber,
-                    "type": "subscribe"}));
+                    "type": "subscribed"}));
 
                 Chat.pending_subscriber = null;
 
@@ -314,18 +310,20 @@ $(document).ready(function () {
             var body = $(this).val();
 
             var message = $msg({to: jid,
-                                "type": "chat"})
+                                "type": "chat", "name": Chat.full_name})
                 .c('body').t(body).up()
                 .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+
             Chat.connection.send(message);
 
             $(this).parent().find('.chat-messages').append(
                 "<div class='chat-message'>&lt;" +
-                "<span class='chat-name me'>" +
-                    Strophe.getNodeFromJid(Chat.connection.jid) +
-                "</span>&gt;<span class='chat-text'>" +
-                body +
+                    "<span class='chat-name me'>" +
+                    Chat.full_name +
+                    "</span>&gt;<span class='chat-text'> " +
+                    body +
                     "</span></div>");
+
             Chat.scroll_chat(Chat.jid_to_id(jid));
 
             $(this).val('');
@@ -333,7 +331,7 @@ $(document).ready(function () {
         } else {
             var composing = $(this).parent().data('composing');
             if (!composing) {
-                var notify = $msg({to: jid, "type": "chat"})
+                var notify = $msg({to: jid, "type": "chat", "name": Chat.full_name})
                     .c('composing', {xmlns: "http://jabber.org/protocol/chatstates"});
                 Chat.connection.send(notify);
 
@@ -341,60 +339,21 @@ $(document).ready(function () {
             }
         }
     });
-
-    $('#disconnect').click(function () {
-        Chat.connection.disconnect();
-        Chat.connection = null;
-    });
-
-    $('#chat_dialog').dialog({
-        autoOpen: false,
-        draggable: false,
-        modal: true,
-        title: 'Start a Chat',
-        buttons: {
-            "Start": function () {
-                var jid = $('#chat-jid').val();
-                var jid_id = Chat.jid_to_id(jid);
-
-                $('#chat-area').tabs('add', '#chat-' + jid_id, jid);
-                $('#chat-' + jid_id).append(
-                    "<div class='chat-messages'></div>" +
-                        "<input type='text' class='chat-input'>");
-
-                $('#chat-' + jid_id).data('jid', jid);
-
-                $('#chat-area').tabs('select', '#chat-' + jid_id);
-                $('#chat-' + jid_id + ' input').focus();
-
-
-                $('#chat-jid').val('');
-
-                $(this).dialog('close');
-            }
-        }
-    });
-
-    $('#new-chat').click(function () {
-        $('#chat_dialog').dialog('open');
-    });
 });
 
 $(document).bind('connect', function (ev, data) {
-    var conn = new Strophe.Connection('http://143.54.12.171:5280/http-bind');
+    var conn = new Strophe.Connection('http://chat-bottin.no-ip.info:5280/http-bind');
 
     conn.connect(data.login, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
-            //alert("foi");
+            Chat.full_name = data.name;
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
-            //alert("off");
             $(document).trigger('disconnected');
         }
     });
 
     Chat.connection = conn;
-    $(document).trigger('chat_data', "coco");
 });
 
 $(document).bind('connected', function () {
@@ -406,12 +365,11 @@ $(document).bind('connected', function () {
 
     Chat.connection.addHandler(Chat.on_message,
                               null, "message", "chat");
-
-    $(document).trigger('chat_data', "FERNANDO");
 });
 
 $(document).bind('disconnected', function () {
     Chat.connection = null;
+    Chat.full_name = null;
     Chat.pending_subscriber = null;
 
     $('#roster-area ul').empty();
@@ -424,12 +382,29 @@ $(document).bind('disconnected', function () {
 $(document).bind('contact_added', function (ev, data) {
     var iq = $iq({type: "set"}).c("query", {xmlns: "jabber:iq:roster"})
         .c("item", data);
-    Chat.connection.sendIQ(iq);
 
-    var subscribe = $pres({to: data.jid, "type": "subscribe"});
+    Chat.connection.sendIQ(iq);
+    var subscribe = $pres({to: data.jid, "type": "subscribe", "name": data.inviter});
     Chat.connection.send(subscribe);
 });
 
-$(document).bind('load_chat', function(ev, chat) {
-    Chat = chat;
+$(document).bind('change_status', function (ev, data) {
+    if(data.status == "offline") {
+        Chat.connection.disconnect();
+        Chat.connection = null;
+        Chat.full_name = null;
+        $("#chat_status_dnd").addClass("hidden");
+        $("#chat_status_away").addClass("hidden");
+    }
+    else {
+        if(data.status == "online" && !Chat.connection) {
+            $(document).trigger('connect',{login: data.login,password: data.password,name: data.name});
+            $("#chat_status_dnd").removeClass("hidden");
+            $("#chat_status_away").removeClass("hidden");
+        }
+        else {
+            var status = $pres().c('show').t(data.status);
+            Chat.connection.send(status);
+        }
+    }
 });

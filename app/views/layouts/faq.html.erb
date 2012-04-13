@@ -14,7 +14,6 @@
     <%= stylesheet_link_tag "lightbox", :media => "screen, projection" %>
     <%= stylesheet_link_tag "jquery.fancybox", :media => "screen, projection" %>
     <%= stylesheet_link_tag "token-input-facebook", :media => "screen, projection" %>
-
     <% unless Rails.env == "production" %>
       <style type="text/css">
         .translation_missing {
@@ -27,7 +26,7 @@
     <!--[if IE]>
     <%= stylesheet_link_tag "ie", :media => "screen, projection" %>
     <![endif]-->
-    <%= javascript_include_tag 'jquery', 'rails.js', 'application', 'jquery.livequery', 'jquery.fancybox', 'jquery.easing','jquery.qtip-1.0.0-rc3', 'jquery.tokeninput', 'strophe.js', 'chat.js' %>
+    <%= javascript_include_tag 'jquery', 'rails.js', 'application', 'jquery.livequery', 'jquery.fancybox', 'jquery.easing','jquery.qtip-1.0.0-rc3', 'jquery.tokeninput' %>
     <%= csrf_meta_tag %>
                 <script type="text/javascript" charset="utf-8">
       $(document).ready(function() {

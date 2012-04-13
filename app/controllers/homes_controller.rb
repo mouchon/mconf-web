@@ -79,18 +79,6 @@ class HomesController < ApplicationController
     render :json => mapped_array
   end
 
-  def session_update
-    session[:chat] = params[:data]
-
-    respond_to do |format|
-      format.html{
-        if request.xhr?
-          render :layout => false
-        end
-      }
-    end
-  end
-
   private
 
   def owner_hash(owner)

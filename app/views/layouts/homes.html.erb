@@ -35,7 +35,7 @@
       }
     </script>
 
-    <%= javascript_include_tag  'jquery', 'rails', 'application', 'jquery.livequery', 'jquery.fancybox', 'jquery.easing', 'jquery-ui', 'jquery.form','jquery.qtip-1.0.0-rc3', 'jquery.tokeninput', 'strophe.js', 'chat.js' %>
+    <%= javascript_include_tag  'jquery', 'rails', 'application', 'jquery.livequery', 'jquery.fancybox', 'jquery.easing', 'jquery-ui', 'jquery.form','jquery.qtip-1.0.0-rc3', 'jquery.tokeninput' %>
     <%= csrf_meta_tag %>
 
     <%= yield :headers %>
@@ -70,6 +70,9 @@
           </div>
           <div id="sidebar">
             <%= yield :sidebar %>
+          </div>
+          <div id="chat-area">
+            <ul></ul>
           </div>
         </div>
         <%= render :partial => "layouts/footer" %>

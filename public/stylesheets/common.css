@@ -224,3 +224,79 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 .float_left { float: left; }
 
 .field { margin-bottom: 5px; }
+
+/* CHAT STYLES */
+
+#chat-area {
+  float: left;
+  width: 600px;
+  height: 300px;
+}
+
+.chat-messages {
+  height: 180px;
+  border-bottom: solid 2px #ddd;
+  overflow: auto;
+}
+
+#chat-area input {
+  margin-top: 10px;
+  width: 95%;
+}
+
+.chat-name {
+  color: #c33;
+}
+
+.chat-message .me {
+  color: #33c;
+}
+
+.chat-event {
+  font-style: italic;
+  font-size: 75%;
+}
+
+.chat-message {
+  font-size: 75%;
+}
+
+#roster-area {
+  padding: 10px;
+  width: 250px;
+}
+
+.user-area ul {
+  margin-bottom: 1px;
+}
+
+.status_chat {}
+
+.online {
+  list-style-image: url("../images/icons/online.png");
+}
+
+.dnd {
+  list-style-image: url("../images/icons/dnd.png");
+}
+
+.away {
+  list-style-image: url("../images/icons/away.png");
+}
+
+.offline {
+  list-style-image: url("../images/icons/offline.png");
+}
+
+.none {
+  list-style-type: none;
+}
+
+.tip {
+  font-size:0.9166em;
+  line-height:1.6363;
+  font-style:italic;
+  color:#111;
+}
+
+.hidden { display: none; }
