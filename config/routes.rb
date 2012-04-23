@@ -193,6 +193,7 @@ Mconf::Application.routes.draw do
     member do
       get :invite_room, :as => 'inviteroom'
       get :invite_chat, :as => 'invitechat'
+      get :invite_bbb_chat, :as => 'invitebbbchat'
       post :send_invite, :as => 'sendinvite'
       post :add_user, :as => 'adduser'
       get :send_notification, :as => 'sendnotification'

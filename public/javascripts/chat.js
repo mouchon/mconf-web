@@ -1,6 +1,5 @@
 var Chat = {
     connection: null,
-    full_name: null,
 
     jid_to_id: function (jid) {
         return Strophe.getBareJidFromJid(jid)
@@ -13,7 +12,6 @@ var Chat = {
             var jid = $(this).attr('jid');
             var name = $(this).attr('name') || jid;
 
-            // transform jid into an id
             var jid_id = Chat.jid_to_id(jid);
 
             var contact = $("<li id='" + jid_id + "' class='offline'>" +
@@ -27,7 +25,6 @@ var Chat = {
             Chat.insert_contact(contact);
         });
 
-        // set up presence handler and send initial presence
         Chat.connection.addHandler(Chat.on_presence, null, "presence");
 
         Chat.connection.send($pres());
@@ -42,8 +39,6 @@ var Chat = {
         var on = $(presence).attr('on');
 
         if (ptype === 'subscribe') {
-            // populate pending_subscriber, the approve-jid span, and
-            // open the dialog
             var name = $(presence).attr('name');
             Chat.pending_subscriber = from;
             $('#approve-jid').text(name);
@@ -60,21 +55,30 @@ var Chat = {
         else if (ptype !== 'error') {
             var contact = $('#roster-area #' + jid_id)
                 .removeClass("online")
-                .removeClass("busy")
+                .removeClass("dnd")
+                .removeClass("away")
+                .removeClass("offline");
+            $("#chat-"+jid_id+" .none")
+                .removeClass("online")
+                .removeClass("dnd")
                 .removeClass("away")
                 .removeClass("offline");
 
             if (ptype === 'unavailable') {
                 contact.addClass("offline");
+                $("#chat-"+jid_id+" .none").addClass("offline");
             } else {
                 var show = $(presence).find("show").text();
                 if (show === "" || show === "chat") {
                     contact.addClass("online");
+                    $("#chat-"+jid_id+" .none").addClass("online");
                 } else {
                     if (show == "dnd") {
-                        contact.addClass("busy");
+                        contact.addClass("dnd");
+                        $("#chat-"+jid_id+" .none").addClass("dnd");
                     } else {
                         contact.addClass("away");
+                        $("#chat-"+jid_id+" .none").addClass("away")
                     }
                 }
             }
@@ -84,7 +88,6 @@ var Chat = {
             Chat.insert_contact(li);
         }
 
-        // reset addressing for user since their presence changed
         var jid_id = Chat.jid_to_id(from);
         $('#chat-' + jid_id).data('jid', Strophe.getBareJidFromJid(from));
 
@@ -99,10 +102,8 @@ var Chat = {
             var jid_id = Chat.jid_to_id(jid);
 
             if (sub === 'remove') {
-                // contact is being removed
                 $('#' + jid_id).remove();
             } else {
-                // contact is being added or modified
                 var contact_html = "<li id='" + jid_id + "' class='" + ($('#' + jid_id).attr('class') || "offline") + "'>" +
                     "<div class='roster-contact'>" +
                     "<div class='roster-name'>" +
@@ -126,23 +127,28 @@ var Chat = {
         var full_jid = $(message).attr('from');
         var jid = Strophe.getBareJidFromJid(full_jid);
         var jid_id = Chat.jid_to_id(jid);
-        var name = $(message).attr('name');
+        var name = $("#"+jid_id).find(".roster-name").text();
+        var status = $("#" + jid_id).attr("class");
 
         if ($('#chat-' + jid_id).length === 0) {
-            $('#chat-area').tabs('add', '#chat-' + jid_id, name);
-            $('#chat-' + jid_id).append(
-                "<div class='chat-messages'></div>" +
-                    "<input type='text' class='chat-input'>");
+            $("#chat1").append(
+                "<div class='mHfL' style='width: 230px; height: 100%;'><div><div class='nn' style='width: 225px; height: 100%; position: absolute;'>" +
+                "<div id='chat-" + jid_id  +"' class='chat-area' style='position: absolute;'>" +
+                "<div class='chat-area-title'><h3><ul><li class='none " + status  + "'>" + name + "<img id='close-chat' src='../images/icons/close-chat.png' width='12' height='12' style='margin-top: 1px; float: right; display:inline;' /></li></ul></h3></div>" +
+                "<div id='message-area'><div class='chat-messages' style='word-wrap: break-word;'></div>" +
+                "<textarea class='chat-input'></textarea>" +
+                "</div></div></div></div></div>"
+            );
+            $('#chat-' + jid_id).data('jid', jid);
+            $('#chat-' + jid_id + ' .chat-input').autosize();
         }
 
-        $('#chat-' + jid_id).data('jid', full_jid);
-
-        $('#chat-area').tabs('select', '#chat-' + jid_id);
+        $('#chat-' + jid_id + ' #message-area').show();
         $('#chat-' + jid_id + ' input').focus();
 
         var composing = $(message).find('composing');
         if (composing.length > 0) {
-            $('#chat-' + jid_id + ' .chat-messages').append(
+            $('#chat-' + jid_id + ' #message-area .chat-messages').append(
                 "<div class='chat-event'>" + name + " is typing...</div>");
 
             Chat.scroll_chat(jid_id);
@@ -165,7 +171,6 @@ var Chat = {
                 if (document.importNode) {
                     $(document.importNode(this, true)).appendTo(span);
                 } else {
-                    // IE workaround
                     span.append(this.xml);
                 }
             });
@@ -174,14 +179,12 @@ var Chat = {
         }
 
         if (body) {
-            // remove notifications since user is now active
-            $('#chat-' + jid_id + ' .chat-event').remove();
+            $('#chat-' + jid_id + ' #message-area .chat-messages .chat-event').remove();
 
-            // add the new message
-            $('#chat-' + jid_id + ' .chat-messages').append(
+            $('#chat-' + jid_id + ' #message-area .chat-messages').append(
                 "<div class='chat-message'>" +
-                "&lt;<span class='chat-name'>" + name +
-                "</span>&gt;<span class='chat-text'> " +
+                "<span class='chat-name'>" + name +
+                " </span><span class='chat-text'>" +
                     "</span></div>");
 
             $('#chat-' + jid_id + ' .chat-message:last .chat-text')
@@ -203,7 +206,7 @@ var Chat = {
         if (elem.hasClass('online')) {
             return 3;
         } else {
-            if (elem.hasClass('busy')) {
+            if (elem.hasClass('dnd')) {
                 return 2;
             } else {
                 if(elem.hasClass('away')) {
@@ -282,45 +285,57 @@ $(document).ready(function () {
         }
     });
 
-    $('#chat-area').tabs().find('.ui-tabs-nav').sortable({axis: 'x'});
+    $("#close-chat").live('click', function(){
+        $(this).parents(".mHfL").remove();
+    });
+
+    $(".chat-area-title").live('click', function(){
+        $(this).parents().children("#message-area").toggle();
+    });
 
     $('.roster-contact').live('click', function () {
         var jid = $(this).find(".roster-jid").text();
         var name = $(this).find(".roster-name").text();
         var jid_id = Chat.jid_to_id(jid);
+        var status = $("#" + jid_id).attr("class");
 
         if ($('#chat-' + jid_id).length === 0) {
-            $('#chat-area').tabs('add', '#chat-' + jid_id, name);
-            $('#chat-' + jid_id).append(
-                "<div class='chat-messages'></div>" +
-                "<input type='text' class='chat-input'>");
+            $("#chat1").append(
+                "<div class='mHfL' style='width: 230px; height: 100%;'><div><div class='nn' style='width: 225px; height: 100%; position: absolute;'>" +
+                "<div id='chat-" + jid_id  +"' class='chat-area' style='position: absolute;'>" +
+                "<div class='chat-area-title'><h3><ul><li class='none " + status  + "'>" + name + "<img id='close-chat' src='../images/icons/close-chat.png' width='12' height='12' style='margin-top: 1px; float: right; display:inline;' /></li></ul></h3></div>" +
+                "<div id='message-area'><div class='chat-messages' style='word-wrap: break-word;'></div>" +
+                "<textarea class='chat-input'></textarea>" +
+                "</div></div></div></div></div>"
+            );
             $('#chat-' + jid_id).data('jid', jid);
+            $('#chat-' + jid_id + ' .chat-input').autosize();
         }
-        $('#chat-area').tabs('select', '#chat-' + jid_id);
 
+        $('#chat-' + jid_id + ' #message-area').show();
         $('#chat-' + jid_id + ' input').focus();
     });
 
     $('.chat-input').live('keypress', function (ev) {
-        var jid = $(this).parent().data('jid');
+        var jid = $(this).parent().parent().data('jid');
+        var name = $("#status").text();
+        //$(this).val($(this).val().replace("\n",""));
 
-        if (ev.which === 13) {
+        if ((ev.which === 13) && ($(this).val().length > 0)) {
             ev.preventDefault();
 
             var body = $(this).val();
 
-            var message = $msg({to: jid,
-                                "type": "chat", "name": Chat.full_name})
+            var message = $msg({to: jid, "type": "chat"})
                 .c('body').t(body).up()
                 .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
 
             Chat.connection.send(message);
 
             $(this).parent().find('.chat-messages').append(
-                "<div class='chat-message'>&lt;" +
-                    "<span class='chat-name me'>" +
-                    Chat.full_name +
-                    "</span>&gt;<span class='chat-text'> " +
+                "<div class='chat-message'>" +
+                    "<span class='chat-name me'>" + name +
+                    "</span><span class='chat-text'>" +
                     body +
                     "</span></div>");
 
@@ -328,10 +343,13 @@ $(document).ready(function () {
 
             $(this).val('');
             $(this).parent().data('composing', false);
+            $(this).css("min-height","30px");
+            $(this).css("max-height","30px");
+            $(this).css("height","30px");
         } else {
             var composing = $(this).parent().data('composing');
             if (!composing) {
-                var notify = $msg({to: jid, "type": "chat", "name": Chat.full_name})
+                var notify = $msg({to: jid, "type": "chat"})
                     .c('composing', {xmlns: "http://jabber.org/protocol/chatstates"});
                 Chat.connection.send(notify);
 
@@ -346,7 +364,6 @@ $(document).bind('connect', function (ev, data) {
 
     conn.connect(data.login, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
-            Chat.full_name = data.name;
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
@@ -369,14 +386,11 @@ $(document).bind('connected', function () {
 
 $(document).bind('disconnected', function () {
     Chat.connection = null;
-    Chat.full_name = null;
     Chat.pending_subscriber = null;
 
     $('#roster-area ul').empty();
-    $('#chat-area ul').empty();
-    $('#chat-area div').remove();
-
-    $('#login_dialog').dialog('open');
+    $('#chat1').empty();
+    $('#chat1').append("<div class='mHfL' style='width:5px;'></div>");
 });
 
 $(document).bind('contact_added', function (ev, data) {
@@ -392,7 +406,6 @@ $(document).bind('change_status', function (ev, data) {
     if(data.status == "offline") {
         Chat.connection.disconnect();
         Chat.connection = null;
-        Chat.full_name = null;
         $("#chat_status_dnd").addClass("hidden");
         $("#chat_status_away").addClass("hidden");
     }

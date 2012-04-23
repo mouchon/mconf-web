@@ -11,7 +11,6 @@
       hintText: "<%= t('invite_people.users.hint') %>",
       noResultsText: "<%= t('invite_people.users.no_results') %>",
       searchingText: "<%= t('invite_people.users.searching') %>",
-      tokenLimit: '1',
       onAdd: function(item){
         jid = item.id + "@chat-bottin.no-ip.info";
         name = item.name;
@@ -19,19 +18,27 @@
       onDelete: function(item){
         jid = null;
         name = null;
+      },
+      onResult: function(result){
+        var results = result;
+        var iten = 0;
+        $.each(result, function(index){
+          var login = result[index-iten].id.replace(" ","-") + "-chat-bottin-no-ip-info";
+          if(!$("#"+login).hasClass("online")){
+            results.splice(index-iten,1);
+            iten = iten + 1;
+          }
+        });
+        return results;
       }
     });
 
     $("#submit").click(function(){
-      if(jid && name){
-        $(document).trigger('contact_added', { jid: jid, name: name, inviter: "<%= current_user.full_name %>" });
-        $.fancybox.close();
-      }
     });
   });
 </script>
 
-<h3 class="dialog_title"><%=t('chat.add')%></h3>
+<h3 class="dialog_title"><%=t('chat.invite.bbb')%></h3>
 
 <div>
   <%= label_tag :member_token, t('chat.name.one') %>
@@ -42,6 +49,6 @@
 <br><br><br>
 <div class="submit float_right">
   <button id="submit" type="submit" class="basic_button pale_button">
-    <%=t('chat.add')%>
+    <%=t('chat.invite.button')%>
   </button>
 </div>

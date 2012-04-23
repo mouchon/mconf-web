@@ -1105,7 +1105,7 @@ a.extract_form{float:right}
 a.extract_form{margin-right:0.5em;}
 
 
-#assistance_title h3,#sidebar .connection_title h3,#sidebar .next-events h3,#home-inbox-title h3,#actions_title h3, #my_spaces_title h3,#sidebar .update_logo h3,.import_icalendar h3,.space_logo h3,#web-chat-title h3{margin:0;padding:3px 10px;color:#244974;}
+#assistance_title h3,#sidebar .connection_title h3,#sidebar .next-events h3,#home-inbox-title h3,#actions_title h3, #my_spaces_title h3,#sidebar .update_logo h3,.import_icalendar h3,.space_logo h3,#web-chat-title h3 {margin:0;padding:3px 10px;color:#244974;}
 #assistance_info,#connection_info,.next-events,#home-inbox-full,#actions_full,.my_spaces,.import_icalendar,.space_logo,#web-chat{
   /*float:left;*/
   width:240px;

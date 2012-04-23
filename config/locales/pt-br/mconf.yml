@@ -195,6 +195,10 @@ pt-br:
     add: "Add Usuário"
     connecting_error_message: "Erro conectando"
     connecting_message: "Conectando ao chat do evento..."
+    invite:
+      button: "Convidar Pessoas"
+      bbb: "Convide usuários para sua sala BBB"
+    me: "eu"
     name:
       one: "Nome"
       other: "Nomes"

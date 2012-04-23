@@ -195,6 +195,10 @@ en:
     add: "Add User"
     connecting_error_message: "Error while connecting"
     connecting_message: "Connecting to event chat..."
+    invite:
+      button: "Invite Users"
+      bbb: "Invite users to your BBB room"
+    me: "me"
     name:
       one: "Name"
       other: "Names"

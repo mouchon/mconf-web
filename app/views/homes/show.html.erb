@@ -35,6 +35,13 @@
       'height' : 140
     });
 
+    $("a#bbb_invite").fancybox({
+      'hideOnContentClick' : false,
+      'autoDimensions' : false,
+      'width' : 306,
+      'height' : 140
+    });
+
   });
 
   /*
@@ -105,7 +112,6 @@
     $('#my_spaces_title .arrow_take_box').toggle(0);
     $('#my_spaces_title .arrow_drop_box').toggle(0);
   });
-
 <% end %>
 
 <%= content_for :search do  %>
@@ -207,7 +213,8 @@
 
     <div class="webchat_area">
       <div class="user-area">
-        <%= link_to image_tag("icons/user_add.png",:class=>"icon", :title=>t('chat.add')), invitechat_invite_path, :id=>"add_user" %>
+        <%= link_to image_tag("icons/user_add.png",:class=>"icon", :title=>t('chat.add')), invitechat_invite_path(), :id=>"add_user" %>
+        <%= link_to image_tag("icons/bbb_logo.png",:class=>"icon", :title=>t('chat.invite.bbb')), invitebbbchat_invite_path(), :id=>"bbb_invite" %>
         <ul>
           <li id="status" class="offline">
             <%= current_user.full_name %>

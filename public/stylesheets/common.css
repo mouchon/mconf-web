@@ -20,51 +20,51 @@ button,input[type=button]{padding:3px 7px 3px 6px;overflow:visible;width:auto;ma
 .cloud_button{background: url("../images/orange-cloud.png") no-repeat center 9%;}
 .cloud_button:hover{background: url("../images/orange-cloud.png") no-repeat center 93%;}
 .cloud_button{
-        font-family:"Lucida Grande",Arial,Helvetica,sans-serif;
+  font-family:"Lucida Grande",Arial,Helvetica,sans-serif;
   font-weight:bold;
   text-align:center;
-        display: block;
+  display: block;
   float: left;
   text-decoration: none;
   outline:none;
   padding:20px 40px 25px;
-        color:#fff;
+  color:#fff;
 }
 
 .cloud_button:hover{text-decoration:none;outline: none;}
 
 .big_button,button,input[type=button],input[type=submit]{
-        font-family:"Lucida Grande",Arial,Helvetica,sans-serif;
-        font-weight:bold;
-        text-align:center;
+  font-family:"Lucida Grande",Arial,Helvetica,sans-serif;
+  font-weight:bold;
+  text-align:center;
 }
 .big_button{
   display: block;
-        float: left;
-        text-decoration: none;
-        outline:none;
-        }
+  float: left;
+  text-decoration: none;
+  outline:none;
+}
 
 .big_button:hover{text-decoration:none;outline: none; /* hide dotted outline in Firefox */}
 
 .big_button span{
-    display: block;}
+  display: block;}
 
 .big_button span:hover{
-    outline: none; /* hide dotted outline in Firefox */}
+  outline: none; /* hide dotted outline in Firefox */}
 
 .big_button,button.big_button{
-        -webkit-border-radius:5px;-moz-border-radius:5px;
-    font-size:120%;
-    line-height:150%;
-    margin-right: 6px;
-        cursor:pointer;
+  -webkit-border-radius:5px;-moz-border-radius:5px;
+  font-size:120%;
+  line-height:150%;
+  margin-right: 6px;
+  cursor:pointer;
 }
 .big_button span{
-        -webkit-border-radius:5px;-moz-border-radius:5px;
-    line-height: 18px;
-        width:202px;
-    padding: 5px 18px 5px 18px;
+  -webkit-border-radius:5px;-moz-border-radius:5px;
+  line-height: 18px;
+  width:202px;
+  padding: 5px 18px 5px 18px;
 }
 
 button.big_button{padding:3px 18px 3px 18px;width:230px;}
@@ -227,21 +227,51 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 
 /* CHAT STYLES */
 
-#chat-area {
-  float: left;
-  width: 600px;
-  height: 300px;
+.chat-area{
+  border:1px #707070 solid;
+  background:#ffffff;
+  width: 100%;
+  bottom: 0;
+}
+
+.chat-area-title {
+  margin:0 0 0.75em;
+  background: #303030;
+  border-bottom:1px #404040 solid;
+}
+
+.chat-area-title h3 {
+  margin:0;
+  padding:3px 10px;
+  color:#ffffff;
+  font-size: 90%;
+  font-weight: bold;
+  font: Sans-serif;
+}
+
+.chat-area-title ul {
+  margin: 0px;
+  margin-left: 10px;
+  width: 203px;
+}
+
+.chat-area textarea {
+  resize: none;
+  overflow: hidden;
+  margin-top: 10px;
+  margin-left: 2px;
+  margin-bottom: 1px;
+  margin-right: 2px;
+  width: 95%;
 }
 
 .chat-messages {
-  height: 180px;
+  margin-left: 3px;
+  margin-right: 1px;
+  height: 230px;
   border-bottom: solid 2px #ddd;
   overflow: auto;
-}
-
-#chat-area input {
-  margin-top: 10px;
-  width: 95%;
+  font-size: 100%;
 }
 
 .chat-name {
@@ -254,10 +284,6 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 
 .chat-event {
   font-style: italic;
-  font-size: 75%;
-}
-
-.chat-message {
   font-size: 75%;
 }
 
@@ -300,3 +326,15 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 }
 
 .hidden { display: none; }
+
+.main-chat-area {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.mHfL { min-height: 1px; float: left; }
