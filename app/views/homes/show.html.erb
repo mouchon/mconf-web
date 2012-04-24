@@ -11,7 +11,7 @@
     var password = "<%= current_user.crypted_password %>";
     var full_name = "<%= current_user.full_name %>";
     var last_status = null;
-    //$(document).trigger('connect',{login: login,password: password,name: full_name});
+    $(document).trigger('connect',{login: login,password: password,name: full_name});
 
     $("#status").click(function(){
       $("#status_list").toggle(0);
@@ -33,6 +33,10 @@
       'autoDimensions' : false,
       'width' : 306,
       'height' : 140
+    });
+
+    $(".bbb-chat-icon").live('click', function(){
+      $(document).trigger('send_bbb_invite', {jid: $(this).parent().parent().data('jid'), msg: "<%= @invite_bbb.html_safe %>", msg_sender: "<%= @bbb_link.html_safe  %>"});
     });
 
     $("a#bbb_invite").fancybox({

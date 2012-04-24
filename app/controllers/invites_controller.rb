@@ -48,6 +48,8 @@ class InvitesController < ApplicationController
   end
 
   def invite_bbb_chat
+    @invite_bbb = t('chat.invite.msg', :url => join_webconf_url(current_users.bigbluebutton_room))
+
     tags = []
     members = Profile.where("full_name like ?", "%#{params[:q]}%").select(['full_name', 'id']).limit(10)
     members.each do |f|

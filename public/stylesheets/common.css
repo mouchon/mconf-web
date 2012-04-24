@@ -235,7 +235,7 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 }
 
 .chat-area-title {
-  margin:0 0 0.75em;
+  margin:0 0 0.40em;
   background: #303030;
   border-bottom:1px #404040 solid;
 }
@@ -296,8 +296,6 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
   margin-bottom: 1px;
 }
 
-.status_chat {}
-
 .online {
   list-style-image: url("../images/icons/online.png");
 }
@@ -338,3 +336,5 @@ input[type=submit].medium_button, button.medium_button, a.medium_button {
 }
 
 .mHfL { min-height: 1px; float: left; }
+
+.bbb-chat-icon { margin-left: 5px; }

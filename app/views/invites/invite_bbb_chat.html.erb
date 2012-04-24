@@ -1,7 +1,6 @@
 <script type="text/javascript">
   $(document).ready(function () {
-    var jid;
-    var name;
+    var jid = new Array();
 
     $("#member_token").tokenInput("/invite/invite_chat.json", {
       crossDomain: false,
@@ -12,12 +11,10 @@
       noResultsText: "<%= t('invite_people.users.no_results') %>",
       searchingText: "<%= t('invite_people.users.searching') %>",
       onAdd: function(item){
-        jid = item.id + "@chat-bottin.no-ip.info";
-        name = item.name;
+        jid.push(item.id + "@chat-bottin.no-ip.info");
       },
       onDelete: function(item){
-        jid = null;
-        name = null;
+        jid.splice(jid.indexOf(item.id + "@chat-bottin.no-ip.info"),1);
       },
       onResult: function(result){
         var results = result;
@@ -34,6 +31,8 @@
     });
 
     $("#submit").click(function(){
+      $(document).trigger('send_bbb', {jid: jid, msg: "<%= @invite_bbb.html_safe %>"});
+      $.fancybox.close();
     });
   });
 </script>

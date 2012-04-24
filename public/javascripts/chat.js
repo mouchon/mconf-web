@@ -135,6 +135,7 @@ var Chat = {
                 "<div class='mHfL' style='width: 230px; height: 100%;'><div><div class='nn' style='width: 225px; height: 100%; position: absolute;'>" +
                 "<div id='chat-" + jid_id  +"' class='chat-area' style='position: absolute;'>" +
                 "<div class='chat-area-title'><h3><ul><li class='none " + status  + "'>" + name + "<img id='close-chat' src='../images/icons/close-chat.png' width='12' height='12' style='margin-top: 1px; float: right; display:inline;' /></li></ul></h3></div>" +
+                "<div style='border-bottom: solid 1px #DDD'><img id='bbb-chat-" + jid_id + "' src='../images/icons/bbb_logo.png' class='bbb-chat-icon'/></div></br>" +
                 "<div id='message-area'><div class='chat-messages' style='word-wrap: break-word;'></div>" +
                 "<textarea class='chat-input'></textarea>" +
                 "</div></div></div></div></div>"
@@ -304,6 +305,7 @@ $(document).ready(function () {
                 "<div class='mHfL' style='width: 230px; height: 100%;'><div><div class='nn' style='width: 225px; height: 100%; position: absolute;'>" +
                 "<div id='chat-" + jid_id  +"' class='chat-area' style='position: absolute;'>" +
                 "<div class='chat-area-title'><h3><ul><li class='none " + status  + "'>" + name + "<img id='close-chat' src='../images/icons/close-chat.png' width='12' height='12' style='margin-top: 1px; float: right; display:inline;' /></li></ul></h3></div>" +
+                "<div style='border-bottom: solid 1px #DDD'><img id='bbb-chat-" + jid_id + "' src='../images/icons/bbb_logo.png' class='bbb-chat-icon'/></div></br>" +
                 "<div id='message-area'><div class='chat-messages' style='word-wrap: break-word;'></div>" +
                 "<textarea class='chat-input'></textarea>" +
                 "</div></div></div></div></div>"
@@ -364,6 +366,7 @@ $(document).bind('connect', function (ev, data) {
 
     conn.connect(data.login, data.password, function (status) {
         if (status === Strophe.Status.CONNECTED) {
+            $("#status").removeClass("offline").addClass("online");
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
@@ -420,4 +423,35 @@ $(document).bind('change_status', function (ev, data) {
             Chat.connection.send(status);
         }
     }
+});
+
+$(document).bind('send_bbb_invite', function (ev, data) {
+    var body = data.msg;
+    var message = $msg({to: data.jid, "type": "chat"})
+        .c('body').t(body).up()
+        .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+
+    Chat.connection.send(message);
+
+    var name = $("#status").text();
+    var body = data.msg_sender;
+
+    $("#chat-"+Chat.jid_to_id(data.jid)).find('.chat-messages').append(
+        "<div class='chat-message'>" +
+        "<span class='chat-name me'>" + name +
+        "</span><span class='chat-text'>" + body +
+        "</span></div>"
+    );
+});
+
+$(document).bind('send_bbb', function (ev, data) {
+    var body = data.msg;
+    $.each(data.jid, function(index){
+        alert(data.jid[index]);
+        var message = $msg({to: data.jid[index], "type": "chat"})
+            .c('body').t(body).up()
+            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
+
+        Chat.connection.send(message);
+    });
 });
