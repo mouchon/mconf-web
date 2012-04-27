@@ -37,6 +37,32 @@ var Chat = {
         var from = $(presence).attr('from');
         var jid_id = Chat.jid_to_id(from);
         var on = $(presence).attr('on');
+        var bbb = $(presence).attr('bbb');
+
+        if(bbb === 'invite') {
+            var name = $("#" + jid_id).find(".roster-name").text();
+            var status = $("#" + jid_id).attr("class");
+
+            if ($('#chat-' + jid_id).length === 0) {
+                $("#chat1").append(
+                    "<div class='mHfL' style='width: 230px; height: 100%;'><div><div class='nn' style='width: 225px; height: 100%; position: absolute;'>" +
+                        "<div id='chat-" + jid_id  +"' class='chat-area' style='position: absolute;'>" +
+                        "<div class='chat-area-title'><h3><ul><li class='none " + status  + "'>" + name + "<img id='close-chat' src='../images/icons/close-chat.png' width='12' height='12' style='margin-top: 1px; float: right; display:inline;' /></li></ul></h3></div>" +
+                        "<div style='border-bottom: solid 1px #DDD'><img id='bbb-chat-" + jid_id + "' src='../images/icons/bbb_logo.png' class='bbb-chat-icon'/></div></br>" +
+                        "<div id='message-area'><div class='chat-messages' style='word-wrap: break-word;'></div>" +
+                        "<textarea class='chat-input'></textarea>" +
+                        "</div></div></div></div></div>"
+                );
+                $('#chat-' + jid_id).data('jid', from);
+                $('#chat-' + jid_id + ' .chat-input').autosize();
+            }
+
+            $('#chat-' + jid_id + ' #message-area').show();
+            $('#chat-' + jid_id + ' .chat-input').focus();
+
+
+            $(document).trigger('bbb_invite',{url: $(presence).attr('url'), jid_id: jid_id});
+        }
 
         if (ptype === 'subscribe') {
             var name = $(presence).attr('name');
@@ -145,7 +171,7 @@ var Chat = {
         }
 
         $('#chat-' + jid_id + ' #message-area').show();
-        $('#chat-' + jid_id + ' input').focus();
+        $('#chat-' + jid_id + ' .chat-input').focus();
 
         var composing = $(message).find('composing');
         if (composing.length > 0) {
@@ -315,13 +341,12 @@ $(document).ready(function () {
         }
 
         $('#chat-' + jid_id + ' #message-area').show();
-        $('#chat-' + jid_id + ' input').focus();
+        $('#chat-' + jid_id + ' .chat-input').focus();
     });
 
     $('.chat-input').live('keypress', function (ev) {
         var jid = $(this).parent().parent().data('jid');
         var name = $("#status").text();
-        //$(this).val($(this).val().replace("\n",""));
 
         if ((ev.which === 13) && ($(this).val().length > 0)) {
             ev.preventDefault();
@@ -426,12 +451,7 @@ $(document).bind('change_status', function (ev, data) {
 });
 
 $(document).bind('send_bbb_invite', function (ev, data) {
-    var body = data.msg;
-    var message = $msg({to: data.jid, "type": "chat"})
-        .c('body').t(body).up()
-        .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-
-    Chat.connection.send(message);
+    Chat.connection.send($pres({to: data.jid, "bbb": "invite", "url": data.url}));
 
     var name = $("#status").text();
     var body = data.msg_sender;
@@ -447,7 +467,6 @@ $(document).bind('send_bbb_invite', function (ev, data) {
 $(document).bind('send_bbb', function (ev, data) {
     var body = data.msg;
     $.each(data.jid, function(index){
-        alert(data.jid[index]);
         var message = $msg({to: data.jid[index], "type": "chat"})
             .c('body').t(body).up()
             .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});

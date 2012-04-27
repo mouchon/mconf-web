@@ -36,7 +36,7 @@
     });
 
     $(".bbb-chat-icon").live('click', function(){
-      $(document).trigger('send_bbb_invite', {jid: $(this).parent().parent().data('jid'), msg: "<%= @invite_bbb.html_safe %>", msg_sender: "<%= @bbb_link.html_safe  %>"});
+      $(document).trigger('send_bbb_invite', {jid: $(this).parent().parent().data('jid'), msg: "<%= @invite_bbb.html_safe %>", url: "<%= join_webconf_url(current_users.bigbluebutton_room) %>", msg_sender: "<%= @bbb_link.html_safe  %>"});
     });
 
     $("a#bbb_invite").fancybox({
@@ -46,6 +46,19 @@
       'height' : 140
     });
 
+  });
+
+  $(document).bind('bbb_invite', function (ev, data) {
+    var name = $("#"+data.jid_id+" .roster-contact .roster-name").text();
+    var body = "<%= t('chat.invite.msg').html_safe %>";
+    body = body.replace(/URL/g,data.url);
+
+    $("#chat-"+data.jid_id).find('.chat-messages').append(
+        "<div class='chat-message'>" +
+        "<span class='chat-name'>" + name +
+        "</span><span class='chat-text'>" + body +
+        "</span></div>"
+    );
   });
 
   /*

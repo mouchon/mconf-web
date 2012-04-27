@@ -196,7 +196,7 @@ pt-br:
     connecting_error_message: "Erro conectando"
     connecting_message: "Conectando ao chat do evento..."
     invite:
-      msg: "Convidou você para participar de uma webconferência, siga este link: <a href=\'%{url}\'> %{url} </a>"
+      msg: "Convidou você para participar de uma webconferência, siga este link: <a href=\' URL \'> URL </a>"
       msg_sender: "Convite enviado. Link para sua sala: <a href=\'%{url}\'> %{url} </a>"
       button: "Convidar Pessoas"
       bbb: "Convide usuários para sua sala BBB"

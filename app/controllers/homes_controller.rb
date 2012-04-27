@@ -28,6 +28,7 @@ class HomesController < ApplicationController
   def show
     @invite_bbb = t('chat.invite.msg', :url => join_webconf_url(current_users.bigbluebutton_room))
     @bbb_link = t('chat.invite.msg_sender', :url => join_webconf_url(current_users.bigbluebutton_room))
+    @bbb_url
 
     @server = BigbluebuttonServer.first
     @bbb_rooms = BigbluebuttonRoom.where("owner_id = ? AND owner_type = ?", current_user.id, current_user.class.name)
