@@ -1,8 +1,14 @@
 <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js'></script>
 
 <%= content_for :headers do  -%>
-  <%= javascript_include_tag 'jquery.filestyle', 'fckeditor/fckeditor', 'jquery.ba-bbq.min', 'strophe.js', 'chat.js' %>
+  <%= javascript_include_tag 'jquery.filestyle', 'fckeditor/fckeditor', 'jquery.ba-bbq.min', 'strophe.js', 'chat.js', 'i18n.js' %>
+  <%= javascript_include_tag 'i18n/translation.js' %>
 <% end -%>
+
+<script type="text/javascript">
+  I18n.defaultLocale = "<%= I18n.default_locale %>";
+  I18n.locale = "<%= I18n.locale %>";
+</script>
 
 <%= content_for :javascript do %>
 
@@ -11,54 +17,7 @@
     var password = "<%= current_user.crypted_password %>";
     var full_name = "<%= current_user.full_name %>";
     var last_status = null;
-    $(document).trigger('connect',{login: login,password: password,name: full_name});
-
-    $("#status").click(function(){
-      $("#status_list").toggle(0);
-      $("#chat_status_"+last_status).removeClass("hidden");
-      $("#chat_status_"+$("#status").attr('class')).addClass("hidden");
-      last_status = $("#status").attr('class');
-    });
-
-    $("#status_list .chat_status").click(function(){
-      var status = $(this).attr('class').replace("chat_status ","");
-      $("#status").removeClass();
-      $(document).trigger('change_status', {login: login, password: password, status: status,name: full_name});
-      $("#status").addClass(status);
-      $("#status_list").toggle(0);
-    });
-
-    $("a#add_user").fancybox({
-      'hideOnContentClick' : false,
-      'autoDimensions' : false,
-      'width' : 306,
-      'height' : 140
-    });
-
-    $(".bbb-chat-icon").live('click', function(){
-      $(document).trigger('send_bbb_invite', {jid: $(this).parent().parent().data('jid'), msg: "<%= @invite_bbb.html_safe %>", url: "<%= join_webconf_url(current_users.bigbluebutton_room) %>", msg_sender: "<%= @bbb_link.html_safe  %>"});
-    });
-
-    $("a#bbb_invite").fancybox({
-      'hideOnContentClick' : false,
-      'autoDimensions' : false,
-      'width' : 306,
-      'height' : 140
-    });
-
-  });
-
-  $(document).bind('bbb_invite', function (ev, data) {
-    var name = $("#"+data.jid_id+" .roster-contact .roster-name").text();
-    var body = "<%= t('chat.invite.msg').html_safe %>";
-    body = body.replace(/URL/g,data.url);
-
-    $("#chat-"+data.jid_id).find('.chat-messages').append(
-        "<div class='chat-message'>" +
-        "<span class='chat-name'>" + name +
-        "</span><span class='chat-text'>" + body +
-        "</span></div>"
-    );
+    $(document).trigger('connect',{login: login, password: password, name: full_name, invite_chat: "<%= invitechat_invite_path() %>", url: "<%= join_webconf_url(current_users.bigbluebutton_room) %>", invite_bbb_chat: "<%= invitebbbchat_invite_path() %>"});
   });
 
   /*
@@ -220,6 +179,7 @@
     <%end%>
   </div>
 
+<!--
   <div id="web-chat" class="margin-up">
     <div id="web-chat-title">
       <h3>
@@ -230,18 +190,18 @@
 
     <div class="webchat_area">
       <div class="user-area">
-        <%= link_to image_tag("icons/user_add.png",:class=>"icon", :title=>t('chat.add')), invitechat_invite_path(), :id=>"add_user" %>
+        <%= link_to image_tag("icons/user_add.png",:class=>"icon", :title=>t('chat.add')), invitechat_invite_path(), :id=>"add_user1" %>
         <%= link_to image_tag("icons/bbb_logo.png",:class=>"icon", :title=>t('chat.invite.bbb')), invitebbbchat_invite_path(), :id=>"bbb_invite" %>
         <ul>
-          <li id="status" class="offline">
+          <li id="status1" class="offline">
             <%= current_user.full_name %>
           </li>
-          <li id="status_list" class="none hidden">
+          <li id="status_list1" class="none hidden">
             <ul>
-              <li id="chat_status_online" class="chat_status online"> <%= t('chat.status.online') %> </li>
-              <li id="chat_status_dnd" class="chat_status dnd"> <%= t('chat.status.busy') %> </li>
-              <li id="chat_status_away" class="chat_status away"> <%= t('chat.status.away') %> </li>
-              <li id="chat_status_offline" class="chat_status offline"> <%= t('chat.status.offline') %> </li>
+              <li id="1chat_status_online" class="chat_status1 online"> <%= t('chat.status.online') %> </li>
+              <li id="1chat_status_dnd" class="chat_status1 dnd"> <%= t('chat.status.busy') %> </li>
+              <li id="1chat_status_away" class="chat_status1 away"> <%= t('chat.status.away') %> </li>
+              <li id="1chat_status_offline" class="chat_status1 offline"> <%= t('chat.status.offline') %> </li>
             </ul>
           </li>
         </ul>
@@ -251,6 +211,8 @@
       </div>
     </div>
   </div>
+-->
+
 <%end%>
 
 <%= content_for :menu do  %>

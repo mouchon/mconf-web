@@ -197,7 +197,7 @@ en:
     connecting_message: "Connecting to event chat..."
     invite:
       msg: "Has invited you to participate in a webconference, follow this link: <a href=\' URL \'> URL </a>"
-      msg_sender: "Invitation sent. Link to your room: <a href=\'%{url}\'> %{url} </a>"
+      msg_sender: "Invitation sent. Link to your room: <a href=\' URL \'> URL </a>"
       button: "Invite Users"
       bbb: "Invite users to your BBB room"
     me: "me"

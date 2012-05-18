@@ -1,6 +1,7 @@
 <script type="text/javascript">
   $(document).ready(function () {
     var jid = new Array();
+    var locale = new Array();
 
     $("#member_token").tokenInput("/invite/invite_chat.json", {
       crossDomain: false,
@@ -31,7 +32,7 @@
     });
 
     $("#submit").click(function(){
-      $(document).trigger('send_bbb', {jid: jid, msg: "<%= @invite_bbb.html_safe %>"});
+      $(document).trigger('send_bbb', {jid: jid, locale: locale});
       $.fancybox.close();
     });
   });

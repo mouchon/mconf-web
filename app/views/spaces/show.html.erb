@@ -197,7 +197,7 @@
 <div id="space_description">
   <h3><%= t('space.description') %></h3>
   <div class="main_text">
-    <%= @space.description %>
+    <%= sanitize(@space.description) %>
   </div>
   <div class="botton_margin">
   </div>
