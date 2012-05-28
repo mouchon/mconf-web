@@ -549,16 +549,5 @@ $(document).bind('change_status', function (ev, data) {
 $(document).bind('send_bbb', function (ev, data) {
     $.each(data.jid, function(index){
         Chat.connection.send($pres({to: data.jid[index], "bbb": "invite", "url": Chat.bbb_room_url}));
-/*        var body = I18n.t('chat.invite.msg', {locale: data.locale[index]});
-        body.replace(/URL/g, Chat.bbb_room_url);
-
-        alert(body);
-
-        var message = $msg({to: data.jid[index], "type": "chat"})
-            .c('body').t(body).up()
-            .c('active', {xmlns: "http://jabber.org/protocol/chatstates"});
-
-        Chat.connection.send(message);
-*/
     });
 });
