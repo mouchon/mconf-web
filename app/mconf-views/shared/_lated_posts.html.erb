@@ -1,0 +1,8 @@
+
+<%if @posts == nil%>
+<%= t('post.none_created') %>
+<%else%>
+	<%@posts.each do |post|%>
+	<%=show_post(post,@space, t('edit'), t('destroy'))%>
+	<% end -%>
+<%end%>

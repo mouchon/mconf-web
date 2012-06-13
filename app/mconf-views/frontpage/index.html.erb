@@ -1,0 +1,47 @@
+<div id="content_top">
+
+  <div id="content_top_container">
+    <div class="registration">
+      <span><%= t('frontpage.register_sentence') %></span><br/>
+      <div class="join_button">
+        <a href="<%= signup_path %>" class="basic_button medium_button orange_button"><span><%= t('register.one') %></span></a>
+      </div>
+    </div>
+    <div class="description">
+      <%= t('frontpage.project_description').html_safe %>
+    </div>
+    <div class="clearer"><span>&nbsp;</span></div>
+  </div>
+
+</div>
+
+<div id="content_stats">
+  <b><%= t('frontpage.stats.title') %></b> <%= t('frontpage.stats.text', :users => @stats[:users], :spaces => @stats[:spaces], :meetings => @stats[:meetings]) %>
+</div>
+
+<div id="content_container">
+
+  <div id="public_spaces">
+    <div class="spaces_left">
+      <h2><%=t('frontpage.popular_spaces')%></h2>
+      <% if @popular_spaces.empty? %>
+        <br/>
+        <%= t('frontpage.no_spaces') %>
+      <% else %>
+        <%= render :partial => 'space_list', :locals => { :spaces => @popular_spaces } %>
+      <% end %>
+    </div>
+    <div class="spaces_right">
+      <h2><%=t('frontpage.running_spaces')%></h2>
+      <% if @running_spaces.empty? %>
+        <br/>
+        <%= t('frontpage.no_rooms') %>
+      <% else %>
+        <%= render :partial => 'space_list', :locals => { :spaces => @running_spaces } %>
+      <% end %>
+    </div>
+  </div>
+  <div class="clearer"><span>&nbsp;</span></div>
+
+</div>
+
