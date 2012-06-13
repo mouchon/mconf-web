@@ -183,7 +183,7 @@ en:
     update: Update
     upload: Upload
   cafe: 
-    login: "Login using CAFe"
+    login: "Login using federation"
   calendar: 
     my: "My Calendar"
     one: Calendar
