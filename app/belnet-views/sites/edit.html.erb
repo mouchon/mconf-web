@@ -147,8 +147,8 @@
       <%= f.text_field :smtp_auth_type %>
   </p>
   <p>
- 
- </p>
+
+  </p>
       <%= f.label :smtp_sender,t('site.smtp_sender') %>
       <%= f.text_field :smtp_sender %>
 
@@ -156,6 +156,7 @@
     <%= f.label :locale, t('site.locale') %>
     <%= f.select :locale, I18n.available_locales %>
   </p>
+
 
   <p>
     <%= f.label :signature, t('site.signature') %>
@@ -169,9 +170,9 @@
   </p>
 
   <p>
-    <%= f.label :enable_globale_register, t('site.enable_global_register')%>
-    <%= f.checkbox :enable_globale_register%>
-  <p>
+    <%= f.label :global_register, t('site.global_register') %>
+    <%= f.check_box :global_register %>
+  </p>
 
   <p>
     <%= f.label :feedback_url, t('site.feedback_url') %>

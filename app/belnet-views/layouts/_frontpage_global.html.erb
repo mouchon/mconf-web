@@ -14,6 +14,7 @@
 
          <!--<a id="logo" class="frontpage_logo" href="/"></a>-->
          <div class="div_login">
+           <% if current_site.global_register? %>
            <%= form_tag session_url(:protocol => current_site.protocol), :class => "login_form" do -%>
              <span>
                <label for="login"><%= t('login.email_or_login') %></label>
@@ -26,24 +27,25 @@
              <%= password_field_tag 'password', nil, :class=>"input_username" %>
 
              <button type="submit" class="basic_button medium_button pale_button"><%=t("login.one")%></button>
-           <% end -%>
+           <% end %>
 
            <div id="subtexto">
              <%= link_to t('register.one'), signup_path, :class => "register_link" %>
              <span>|</span>
              <%= link_to t('user.lost_password'), lost_password_path, :class => "register_link" %>
              <% if current_site.shib_enabled? %>
-               <span>|</span>
+             <span>|</span>
+             <% end %>
+             <% end %>
+             <% if current_site.shib_enabled? %>
                <%= link_to t('cafe.login'), shibboleth_path %>
              <% end %>
            </div>
-         </div>
-
+         
          <div id="frontpage_logo">
            <a href="/"><span class="title"><%= t('mconf') %></span><span class="beta"><%= t('beta') %></span></a>
          </div>
-
-
+        </div>
         <% end %>
    </ul>
    <%if logged_in?%>
