@@ -13,10 +13,6 @@
         <% else %>
 
          <!--<a id="logo" class="frontpage_logo" href="/"></a>-->
-         <div id="frontpage_logo">
-           <a href="/"><span class="title"><%= t('mconf') %></span><span class="beta"><%= t('beta') %></span></a>
-         </div>
-
          <div class="div_login">
            <%= form_tag session_url(:protocol => current_site.protocol), :class => "login_form" do -%>
              <span>
@@ -41,6 +37,9 @@
                <%= link_to t('cafe.login'), shibboleth_path %>
              <% end %>
            </div>
+         </div>
+         <div id="frontpage_logo">
+           <a href="/"><span class="title"><%= t('mconf') %></span><span class="beta"><%= t('beta') %></span></a>
          </div>
 
         <% end %>
