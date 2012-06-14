@@ -157,6 +157,7 @@
     <%= f.select :locale, I18n.available_locales %>
   </p>
 
+
   <p>
     <%= f.label :signature, t('site.signature') %>
     <%= f.text_area :signature %>
@@ -166,6 +167,11 @@
     <%= f.label :ssl, t('site.ssl') %>
     <%= f.check_box :ssl %>
     <%= image_tag("icons/help.png",:title=>"",:size=>"16x16",:class=>"tooltip_ssl icon",:style=>"cursor:pointer").html_safe %>
+  </p>
+
+  <p>
+    <%= f.label :global_register, t('site.global_register') %>
+    <%= f.check_box :global_register %>
   </p>
 
   <p>

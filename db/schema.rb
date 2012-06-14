@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120611122802) do
+ActiveRecord::Schema.define(:version => 20120612142936) do
 
   create_table "admissions", :force => true do |t|
     t.string   "type"
@@ -433,6 +433,7 @@ ActiveRecord::Schema.define(:version => 20120611122802) do
     t.string   "smtp_domain"
     t.string   "smtp_auth_type"
     t.string   "smtp_sender"
+    t.boolean  "global_register"
   end
 
   create_table "source_importations", :force => true do |t|

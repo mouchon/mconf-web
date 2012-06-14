@@ -1,9 +1,9 @@
 class AddEnableDisableRegisterToSite < ActiveRecord::Migration
   def self.up
-    add_column :sites ,:enable_global_register,:boolean
+    add_column :sites ,:global_register,:boolean
   end
 
   def self.down
-   remove_column :sites,:enable_global_register
+   remove_column :sites,:global_register
   end
 end
