@@ -158,37 +158,51 @@ ol{list-style-type:decimal;}
 /*----------------------- GRID.css ---------------------------*/
 /*body{background:url(../images/grid.png);}*/
 
-
+#site {
+        background-color:#f5f5f5;
+        margin:0px auto;
+        width: 90%;
+}
 /*all css for the header and the navigation part(tabs, search,etc*/
 body{min-width:960px;background-color:white;}
 body .icon{margin-bottom:-2px;}
 #header,#profile_header{background-color:#fff;height:67px;}
-#global,#space,#content,#footer,#faq,#help{width:960px;margin:0 auto;display:block;}
-#space{background-color:#e1eef5;}
+#global,#space,#content,#footer,#faq,#help{margin:0 auto;display:block;}
+#space{background-color:#e1eef5;margin-top: 10px;}
 #content{clear:left;min-height:400px;padding-top:1em;overflow:hidden;position:relative;}
 
 #global-wrapper{
-  background:#244974;
-  -moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
-  -webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
-  box-shadow:inset 0px 1px 0px 0px #ffffff;
-  background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #34618e), color-stop(1, #1F4A75) );
-  background:-moz-linear-gradient( center top, #34618e 5%, #1F4A75 100% );
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#34618e', endColorstr='#1F4A75');
-  background-color:#1F4A75;
-  height: 35px;
+  width:100%;
+  height: 150px;
+  margin: 5px 0px 5px 0px;
+
+ }
+
+#global{ height: 150px;background-color: rgb(39, 0, 23);background-image: url('headerimg-plus.png');background-repeat: no-repeat;width: 100%;margin: 5px 0px 5px 0px;float: left;}
+#global a{color: rgb(74,22,102);text-decoration:none;}
+#global-logo {
+  z-index: 1;
+  background-color: white;
+  height: 20px;
+  margin-left: 250px;
+  margin-top: 100px;
+  padding: 15px 25px 15px 25px;
+  border-radius: 2Opx 0px 0px 0px;
+  -webkit-border-radius: 20px 0px 0px 0px;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4A1666;
+  float: left;
+  width: 100%;
 }
-#global{padding: 0.5em 0 0 0;}
-#global a{color:#eee;text-decoration:none;}
-#global-logo {float:left;}
-#global-logo img{margin:0 4px -4px 0;}
+
 #global-logo .title {
   margin: 0;
   padding: 0;
-  color: white;
+  color: rgb(83, 34, 110);
   font-weight: bold;
   font-size: 20px;
-  text-shadow: #6374AB 1px 1px 5px;
   font-family: Helvetica,sans-serif;
 }
 #global-logo .title:hover {
@@ -197,7 +211,7 @@ body .icon{margin-bottom:-2px;}
 #global-logo .small {
   margin: 0 0 0 2px;
   padding: 0;
-  color: #ccc;
+  color: rgb(83, 34, 110);
   font-weight: normal;
   font-size: 14px;
   font-style: italic;
@@ -223,7 +237,7 @@ body .icon{margin-bottom:-2px;}
 #feedback:hover,#about:hover{background:#275b96;/*otros colores  #2b578a;/*346aa8;#5C75AA*/}
 
 #header,#profile_header{padding-top:1em;padding-bottom:1em;overflow:visible !important;position:relative;}
-#header{height:68px;}
+#header{height:68px;margin-top: 30px;}
 #logo,#vcc-logo{float:left;}
 #search{
   float: right;
@@ -235,7 +249,7 @@ body .icon{margin-bottom:-2px;}
 #logo:hover{border-color:#c0c0c0;}
 #logo img.logo{width:100%;}
 #name-space{width:500px;margin-left:20px;float:left;}
-#name-space span a, #name-home span a{font-size:3em;line-height:2;color:#244974;font-weight:normal;text-decoration:none;}
+#name-space span a, #name-home span a{font-size:3em;line-height:2;color: rgb(83, 34, 110);font-weight:normal;text-decoration:none;}
 #name-space #small-title a,#name-home #small-title a{font-size:2em;line-height:3;}
 #name-home{margin-left:20px;float:left;}
 
@@ -292,11 +306,11 @@ div.space-desc h3, div.space-desc p{color:#244974;}
 #selector .first_ul{margin:0 0 0 0;}
 #selector #help{margin-top:14px;}
 h3.selector_title{color:#244974;margin-top:15px;}
-#menu{background:#fff;}
+#menu{background: white;}
 #menu ul{list-style-type:none;margin:0;font-size:1em;line-height:1.5;font-weight:bold;background:#e1eef5;}
 #menu li{display:inline;margin-right:-3px;}
-#menu li a{display:inline-block;padding:5px 10px;border-right:1px solid #d3e8f6;text-decoration:none;background:#244974; color:white}
-#menu li .selected{background:white; color:#244974}
+#menu li a{display:inline-block;padding:5px 10px;border-right:1px solid #d3e8f6;text-decoration:none;background: rgb(82, 34, 110); color:white}
+#menu li .selected{background:white; color: rgb(83, 34, 110);}
 #menu li .admin{background:#ffa903;color:#FFF;}
 #menu li a:hover{background:white;color:#244974;border-right-color:#d3e8f6;}
 

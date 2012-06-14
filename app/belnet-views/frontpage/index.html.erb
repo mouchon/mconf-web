@@ -1,12 +1,14 @@
 <div id="content_top">
 
   <div id="content_top_container">
+     <% if current_site.global_register? %>
     <div class="registration">
       <span><%= t('frontpage.register_sentence') %></span><br/>
       <div class="join_button">
         <a href="<%= signup_path %>" class="basic_button medium_button orange_button"><span><%= t('register.one') %></span></a>
       </div>
     </div>
+    <% end %> 
     <div class="description">
       <%= t('frontpage.project_description').html_safe %>
     </div>
