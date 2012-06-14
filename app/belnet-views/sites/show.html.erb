@@ -80,6 +80,12 @@
   </p>
 
   <p>
+    <label><%= t('site.:side_bar_left') %>:</label>
+    <span class="value"><%= current_site.side_bar_left? %></span>
+  </p>
+
+
+  <p>
     <label><%= t('site.analytics_code') %>:</label>
     <span class="value"><%= sanitize current_site.analytics_code %></span>
   </p>
